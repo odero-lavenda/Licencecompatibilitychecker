@@ -1,0 +1,32 @@
+{
+  "id": "license-checker-agent",
+  "name": "License Compatibility Checker",
+  "version": "1.0.0",
+  "description": "Checks open source license compatibility, provides license details, and shares daily license insights. Perfect for developers who need to understand licensing requirements.",
+  "capabilities": [
+    "license-compatibility-check",
+    "license-information",
+    "daily-license-insights"
+  ],
+  "skills": [
+    {
+      "name": "Check Compatibility",
+      "description": "Verify if two licenses can be used together",
+      "example": "Can I use MIT with GPL-3.0?"
+    },
+    {
+      "name": "License Details",
+      "description": "Get comprehensive information about any license",
+      "example": "Tell me about Apache-2.0 license"
+    },
+    {
+      "name": "List Available Licenses",
+      "description": "Show all supported open source licenses",
+      "example": "Show me all licenses"
+    }
+  ],
+  "endpoint": {
+    "url": "http://localhost:8080/v1/message",
+    "protocol": "A2A"
+  }
+}
