@@ -1,13 +1,4 @@
 {
-  "id": "license-checker-agent",
-  "name": "License Compatibility Checker",
-  "version": "1.0.0",
-  "description": "Checks open source license compatibility, provides license details, and shares daily license insights. Perfect for developers who need to understand licensing requirements.",
-  "capabilities": [
-    "license-compatibility-check",
-    "license-information",
-    "daily-license-insights"
-  ],
   "skills": [
     {
       "name": "Check Compatibility",
@@ -26,7 +17,16 @@
     }
   ],
   "endpoint": {
-    "url": "http://localhost:8080/v1/message",
-    "protocol": "A2A"
-  }
+    "protocol": "A2A",
+    "url": "https://2e764edc8acf.ngrok-free.app /v1/message"
+  },
+  "capabilities": [
+    "license-compatibility-check",
+    "license-information",
+    "daily-license-insights"
+  ],
+  "name": "License Compatibility Checker",
+  "description": "Checks open source license compatibility, provides license details, and shares daily license insights. Perfect for developers who need to understand licensing requirements.",
+  "id": "license-checker-agent",
+  "version": "1.0.0"
 }
