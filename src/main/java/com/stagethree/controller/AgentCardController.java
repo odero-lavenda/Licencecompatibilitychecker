@@ -12,10 +12,10 @@ public class AgentCardController  {
     private static final String AGENT_NAME = "License Compatibility Checker";
     private static final String AGENT_VERSION = "1.0.0";
 
-    @GetMapping("/.well-known/agent-card")
+    @GetMapping(value = "/.well-known/agent-card", produces = "application/json")
     public String getAgentCard() {
         JSONObject agentCard = buildAgentCard();
-        return agentCard.toString(2);
+        return agentCard.toString(2);  // Pretty-print JSON with indentation
     }
 
     private JSONObject buildAgentCard() {
@@ -37,7 +37,7 @@ public class AgentCardController  {
         card.put("skills", buildSkills());
 
         JSONObject endpoint = new JSONObject();
-        endpoint.put("url", "http://localhost:8080/v1/message");
+        endpoint.put("url", "https://08b6b6c6dcc6.ngrok-free.app/v1/message"); // ngrok URL
         endpoint.put("protocol", "A2A");
         card.put("endpoint", endpoint);
 
@@ -75,6 +75,5 @@ public class AgentCardController  {
         skill.put("example", example);
         return skill;
     }
-
 
 }
