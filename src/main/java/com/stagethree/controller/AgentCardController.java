@@ -2,7 +2,6 @@ package com.stagethree.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,9 +10,6 @@ public class AgentCardController {
     private static final String AGENT_ID = "license-checker-agent";
     private static final String AGENT_NAME = "License Compatibility Checker";
     private static final String AGENT_VERSION = "1.0.0";
-
-    @Value("${RAILWAY_PUBLIC_DOMAIN:localhost:8080}")
-    private String publicDomain;
 
     @GetMapping(value = "/.well-known/agent-card", produces = "application/json")
     public String getAgentCard() {
@@ -41,15 +37,7 @@ public class AgentCardController {
 
         JSONObject endpoint = new JSONObject();
 
-        // Use Railway domain if available, otherwise fallback to localhost
-        String baseUrl;
-        if (publicDomain.contains("railway")) {
-            baseUrl = "https://" + publicDomain;
-        } else {
-            baseUrl = "http://" + publicDomain;
-        }
-
-        endpoint.put("url", baseUrl + "/v1/message");
+        endpoint.put("url", "https://licencecompatibilitychecker-production.up.railway.app/v1/message");
         endpoint.put("protocol", "A2A");
         card.put("endpoint", endpoint);
 
