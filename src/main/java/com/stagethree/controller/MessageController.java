@@ -1,17 +1,10 @@
 package com.stagethree.controller;
 
 import com.stagethree.service.MessageProcessorService;
-import com.stagethree.utility.HttpUtils;
-import io.netty.channel.ChannelOutboundBuffer;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.web.exchanges.HttpExchange;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +17,7 @@ public class MessageController {
         this.messageProcessor = messageProcessor;
     }
 
-    @PostMapping("/message")
+    @PostMapping(value = "/message", produces = "application/json")
     public String handleMessage(@RequestBody String requestBody) {
         try {
             JSONObject request = new JSONObject(requestBody);
@@ -39,7 +32,6 @@ public class MessageController {
 
             String responseText = messageProcessor.processMessage(userInput);
 
-
             String taskId = generateTaskId();
             JSONObject response = buildSuccessResponse(request.optString("id"), taskId, responseText);
             return response.toString(2);
@@ -50,11 +42,31 @@ public class MessageController {
         }
     }
 
-
     private boolean isValidRequest(JSONObject request) {
-        return request.has("params")
-                && request.getJSONObject("params").has("message")
-                && request.getJSONObject("params").getJSONObject("message").has("parts");
+        if (!request.has("jsonrpc") || !"2.0".equals(request.optString("jsonrpc"))) {
+            return false;
+        }
+
+        if (!request.has("method") || !"message".equals(request.optString("method"))) {
+            return false;
+        }
+
+        if (!request.has("id")) {
+            return false;
+        }
+
+        // Check params structure
+        if (!request.has("params")) {
+            return false;
+        }
+
+        JSONObject params = request.getJSONObject("params");
+        if (!params.has("message")) {
+            return false;
+        }
+
+        JSONObject message = params.getJSONObject("message");
+        return message.has("parts");
     }
 
     private String extractTextFromParts(org.json.JSONArray parts) {
@@ -102,7 +114,3 @@ public class MessageController {
         return error;
     }
 }
-
-
-
-

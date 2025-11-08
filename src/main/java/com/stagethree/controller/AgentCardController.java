@@ -2,9 +2,9 @@ package com.stagethree.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class AgentCardController {
@@ -12,16 +12,16 @@ public class AgentCardController {
     private static final String AGENT_NAME = "License Compatibility Checker";
     private static final String AGENT_VERSION = "1.0.0";
 
+    @Value("${RAILWAY_PUBLIC_DOMAIN:localhost:8080}")
+    private String publicDomain;
+
     @GetMapping(value = "/.well-known/agent-card", produces = "application/json")
-    public String getAgentCard(HttpServletRequest request) {
-        JSONObject agentCard = buildAgentCard(request);
-        return agentCard.toString(2);  // Pretty-print JSON with indentation
+    public String getAgentCard() {
+        JSONObject agentCard = buildAgentCard();
+        return agentCard.toString(2);
     }
 
-    private JSONObject buildAgentCard(HttpServletRequest request) {
-        // Get the base URL dynamically
-        String baseUrl = getBaseUrl(request);
-
+    private JSONObject buildAgentCard() {
         JSONObject card = new JSONObject();
         card.put("id", AGENT_ID);
         card.put("name", AGENT_NAME);
@@ -40,28 +40,20 @@ public class AgentCardController {
         card.put("skills", buildSkills());
 
         JSONObject endpoint = new JSONObject();
-        endpoint.put("url", baseUrl + "/v1/message"); // Dynamic URL
+
+        // Use Railway domain if available, otherwise fallback to localhost
+        String baseUrl;
+        if (publicDomain.contains("railway")) {
+            baseUrl = "https://" + publicDomain;
+        } else {
+            baseUrl = "http://" + publicDomain;
+        }
+
+        endpoint.put("url", baseUrl + "/v1/message");
         endpoint.put("protocol", "A2A");
         card.put("endpoint", endpoint);
 
         return card;
-    }
-
-    private String getBaseUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-
-        // Build base URL
-        String baseUrl = scheme + "://" + serverName;
-
-        // Only add port if it's not standard (80 for HTTP, 443 for HTTPS)
-        if (("http".equals(scheme) && serverPort != 80) ||
-                ("https".equals(scheme) && serverPort != 443)) {
-            baseUrl += ":" + serverPort;
-        }
-
-        return baseUrl;
     }
 
     private JSONArray buildSkills() {
