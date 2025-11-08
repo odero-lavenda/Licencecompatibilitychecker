@@ -4,21 +4,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
-public class AgentCardController  {
+public class AgentCardController {
     private static final String AGENT_ID = "license-checker-agent";
     private static final String AGENT_NAME = "License Compatibility Checker";
     private static final String AGENT_VERSION = "1.0.0";
 
     @GetMapping(value = "/.well-known/agent-card", produces = "application/json")
-    public String getAgentCard() {
-        JSONObject agentCard = buildAgentCard();
+    public String getAgentCard(HttpServletRequest request) {
+        JSONObject agentCard = buildAgentCard(request);
         return agentCard.toString(2);  // Pretty-print JSON with indentation
     }
 
-    private JSONObject buildAgentCard() {
+    private JSONObject buildAgentCard(HttpServletRequest request) {
+        // Get the base URL dynamically
+        String baseUrl = getBaseUrl(request);
+
         JSONObject card = new JSONObject();
         card.put("id", AGENT_ID);
         card.put("name", AGENT_NAME);
@@ -37,11 +40,28 @@ public class AgentCardController  {
         card.put("skills", buildSkills());
 
         JSONObject endpoint = new JSONObject();
-        endpoint.put("url", "https://08b6b6c6dcc6.ngrok-free.app/v1/message"); // ngrok URL
+        endpoint.put("url", baseUrl + "/v1/message"); // Dynamic URL
         endpoint.put("protocol", "A2A");
         card.put("endpoint", endpoint);
 
         return card;
+    }
+
+    private String getBaseUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+
+        // Build base URL
+        String baseUrl = scheme + "://" + serverName;
+
+        // Only add port if it's not standard (80 for HTTP, 443 for HTTPS)
+        if (("http".equals(scheme) && serverPort != 80) ||
+                ("https".equals(scheme) && serverPort != 443)) {
+            baseUrl += ":" + serverPort;
+        }
+
+        return baseUrl;
     }
 
     private JSONArray buildSkills() {
@@ -75,5 +95,4 @@ public class AgentCardController  {
         skill.put("example", example);
         return skill;
     }
-
 }
