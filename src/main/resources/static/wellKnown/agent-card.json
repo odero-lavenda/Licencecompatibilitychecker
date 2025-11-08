@@ -18,7 +18,7 @@
   ],
   "endpoint": {
     "protocol": "A2A",
-    "url": "licencecompatibilitychecker-production.up.railway.app/v1/message"
+    "url": "https://licencecompatibilitychecker-production.up.railway.app/v1/message"
   },
   "capabilities": [
     "license-compatibility-check",

@@ -66,7 +66,7 @@ public class MessageProcessorService {
         List<String> licenses = LicenseExtractor.extractLicenseNames(input);
 
         if (licenses.size() < 2) {
-            return "❌ Please specify two licenses to check compatibility.\n\n" +
+            return "Please specify two licenses to check compatibility.\n\n" +
                     "**Example:** \"Can I use MIT with GPL-3.0?\"";
         }
 
@@ -81,7 +81,7 @@ public class MessageProcessorService {
         List<String> licenses = LicenseExtractor.extractLicenseNames(input);
 
         if (licenses.isEmpty()) {
-            return "❌ Please specify a license name.\n\n" +
+            return "Please specify a license name.\n\n" +
                     "**Example:** \"Tell me about MIT license\"\n\n" +
                     "**Popular licenses:** MIT, Apache-2.0, GPL-3.0, BSD-3-Clause";
         }
@@ -89,7 +89,7 @@ public class MessageProcessorService {
         LicenseInfo info = licenseService.getLicenseInfo(licenses.get(0));
 
         if (info == null) {
-            return "❌ License not found: " + licenses.get(0).toUpperCase() + "\n\n" +
+            return "License not found: " + licenses.get(0).toUpperCase() + "\n\n" +
                     "Try: mit, apache-2.0, gpl-3.0, bsd-3-clause, mpl-2.0";
         }
 
@@ -107,15 +107,15 @@ public class MessageProcessorService {
     }
 
     private String generateHelpMessage() {
-        return "👋 **Welcome to License Compatibility Checker!**\n\n" +
+        return "**Welcome to License Compatibility Checker!**\n\n" +
                 "I help developers understand open source licenses. Here's what I can do:\n\n" +
-                "🔍 **Check Compatibility:**\n" +
+                "**Check Compatibility:**\n" +
                 "   \"Can I use MIT with GPL-3.0?\"\n\n" +
-                "📋 **License Information:**\n" +
+                "**License Information:**\n" +
                 "   \"Tell me about Apache-2.0\"\n\n" +
-                "📚 **List All Licenses:**\n" +
+                "**List All Licenses:**\n" +
                 "   \"Show me all licenses\"\n\n" +
-                "📅 **Daily License:**\n" +
+                "**Daily License:**\n" +
                 "   \"License of the day\"\n\n" +
                 "💡 Just ask naturally - I'll understand!";
     }
