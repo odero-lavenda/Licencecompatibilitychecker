@@ -18,7 +18,7 @@
   ],
   "endpoint": {
     "protocol": "A2A",
-    "url": "https://2e764edc8acf.ngrok-free.app/v1/message"
+    "url": "licencecompatibilitychecker-production.up.railway.app/v1/message"
   },
   "capabilities": [
     "license-compatibility-check",
